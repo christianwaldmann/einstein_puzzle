@@ -74,13 +74,16 @@ for nations in nationalities_permutation:
                                         and next_to(pets, "Katze", cigarettes, "Marlboro")
                                         and next_to(pets, "Pferd", cigarettes, "Dunhill")
                                     ):
-                                        print([f"{x:10}" for x in nations])
-                                        print([f"{x:10}" for x in houses])
-                                        print([f"{x:10}" for x in drinks])
-                                        print([f"{x:10}" for x in cigarettes])
-                                        print([f"{x:10}" for x in pets])
+                                        header = [f"{i + 1}. Haus" for i in range(5)]
+                                        print("".join([f"{x:13}" for x in header]))
+                                        print("-" * 13 * 5)
+                                        print("".join([f"{x:13}" for x in nations]))
+                                        print("".join([f"{x:13}" for x in houses]))
+                                        print("".join([f"{x:13}" for x in drinks]))
+                                        print("".join([f"{x:13}" for x in cigarettes]))
+                                        print("".join([f"{x:13}" for x in pets]))
                                         print()
 
 
 end = timer()
-print(f"Time: {timedelta(seconds=end - start)}")
+print(f"Zeit: {timedelta(seconds=end - start)}")
