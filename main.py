@@ -1,4 +1,18 @@
 import itertools
+from timeit import default_timer as timer
+from datetime import timedelta
+
+
+start = timer()
+
+
+class NoWrap(list):
+    def __getitem__(self, index):
+        if index < 0 or index >= len(self):
+            return None
+        else:
+            return list.__getitem__(self, index)
+
 
 houses = ["rot", "grün", "weiß", "gelb", "blau"]
 nationalities = ["Norweger", "Brite", "Schwede", "Däne", "Deutscher"]
@@ -7,11 +21,12 @@ cigarettes = ["Dunhill", "Rothmanns", "Pall Mall", "Marlboro", "Winfield"]
 pets = ["Hund", "Vogel", "Katze", "Pferd", "Fisch"]
 
 
-house_permutation = [x for x in itertools.permutations(houses)]
-nationalities_permutation = [x for x in itertools.permutations(nationalities)]
-drinks_permutation = [x for x in itertools.permutations(drinks)]
-cigarettes_permutation = [x for x in itertools.permutations(cigarettes)]
-pets_permutation = [x for x in itertools.permutations(pets)]
+house_permutation = [NoWrap(x) for x in itertools.permutations(houses)]
+nationalities_permutation = [NoWrap(x) for x in itertools.permutations(nationalities)]
+drinks_permutation = [NoWrap(x) for x in itertools.permutations(drinks)]
+cigarettes_permutation = [NoWrap(x) for x in itertools.permutations(cigarettes)]
+pets_permutation = [NoWrap(x) for x in itertools.permutations(pets)]
+
 
 for nations in nationalities_permutation:
     if nations[0] == "Norweger":
@@ -28,51 +43,42 @@ for nations in nationalities_permutation:
                         and drinks[2] == "Milch"
                     ):
                         for cigarettes in cigarettes_permutation:
-                            try:
-                                if (
-                                    cigarettes[houses.index("gelb")] == "Dunhill"
-                                    and drinks[cigarettes.index("Winfield")] == "Bier"
-                                    and cigarettes[nations.index("Deutscher")]
-                                    == "Rothmanns"
-                                    and (
-                                        drinks[cigarettes.index("Marlboro") - 1]
-                                        == "Wasser"
-                                        or drinks[cigarettes.index("Marlboro") + 1]
-                                        == "Wasser"
-                                    )
-                                ):
-                                    for pets in pets_permutation:
-                                        try:
-                                            if (
-                                                pets[nations.index("Schwede")] == "Hund"
-                                                and pets[cigarettes.index("Pall Mall")]
-                                                == "Vogel"
-                                                and (
-                                                    cigarettes[pets.index("Katze") - 1]
-                                                    == "Marlboro"
-                                                    or cigarettes[
-                                                        pets.index("Katze") + 1
-                                                    ]
-                                                    == "Marlboro"
-                                                )
-                                                and (
-                                                    cigarettes[pets.index("Pferd") - 1]
-                                                    == "Dunhill"
-                                                    or cigarettes[
-                                                        pets.index("Pferd") + 1
-                                                    ]
-                                                    == "Dunhill"
-                                                )
-                                            ):
-                                                print([f"{x:10}" for x in nations])
-                                                print([f"{x:10}" for x in houses])
-                                                print([f"{x:10}" for x in drinks])
-                                                print([f"{x:10}" for x in cigarettes])
-                                                print([f"{x:10}" for x in pets])
-                                                print()
-                                        except IndexError:
-                                            continue
-                            except IndexError:
-                                continue
+                            if (
+                                cigarettes[houses.index("gelb")] == "Dunhill"
+                                and drinks[cigarettes.index("Winfield")] == "Bier"
+                                and cigarettes[nations.index("Deutscher")]
+                                == "Rothmanns"
+                                and (
+                                    drinks[cigarettes.index("Marlboro") - 1] == "Wasser"
+                                    or drinks[cigarettes.index("Marlboro") + 1]
+                                    == "Wasser"
+                                )
+                            ):
+                                for pets in pets_permutation:
+                                    if (
+                                        pets[nations.index("Schwede")] == "Hund"
+                                        and pets[cigarettes.index("Pall Mall")]
+                                        == "Vogel"
+                                        and (
+                                            cigarettes[pets.index("Katze") - 1]
+                                            == "Marlboro"
+                                            or cigarettes[pets.index("Katze") + 1]
+                                            == "Marlboro"
+                                        )
+                                        and (
+                                            cigarettes[pets.index("Pferd") - 1]
+                                            == "Dunhill"
+                                            or cigarettes[pets.index("Pferd") + 1]
+                                            == "Dunhill"
+                                        )
+                                    ):
+                                        print([f"{x:10}" for x in nations])
+                                        print([f"{x:10}" for x in houses])
+                                        print([f"{x:10}" for x in drinks])
+                                        print([f"{x:10}" for x in cigarettes])
+                                        print([f"{x:10}" for x in pets])
+                                        print()
 
-b = 1
+
+end = timer()
+print(f"Time: {timedelta(seconds=end - start)}")
