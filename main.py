@@ -14,6 +14,24 @@ class NoWrap(list):
             return list.__getitem__(self, index)
 
 
+def equals(first_list, first_list_element, second_list, second_list_element):
+    return second_list[first_list.index(first_list_element)] == second_list_element
+
+
+def left(first_list, first_list_element, second_list, second_list_element):
+    return second_list[first_list.index(first_list_element) - 1] == second_list_element
+
+
+def right(first_list, first_list_element, second_list, second_list_element):
+    return second_list[first_list.index(first_list_element) + 1] == second_list_element
+
+
+def next_to(first_list, first_list_element, second_list, second_list_element):
+    return left(first_list, first_list_element, second_list, second_list_element) or right(
+        first_list, first_list_element, second_list, second_list_element
+    )
+
+
 houses = ["rot", "grün", "weiß", "gelb", "blau"]
 nationalities = ["Norweger", "Brite", "Schwede", "Däne", "Deutscher"]
 drinks = ["Wasser", "Tee", "Milch", "Kaffee", "Bier"]
@@ -32,45 +50,29 @@ for nations in nationalities_permutation:
     if nations[0] == "Norweger":
         for houses in house_permutation:
             if (
-                houses[nations.index("Brite")] == "rot"
-                and houses[houses.index("grün") - 1] == "weiß"
-                and houses[nations.index("Norweger") + 1] == "blau"
+                equals(nations, "Brite", houses, "rot")
+                and left(houses, "grün", houses, "weiß")
+                and right(nations, "Norweger", houses, "blau")
             ):
                 for drinks in drinks_permutation:
                     if (
-                        drinks[nations.index("Däne")] == "Tee"
-                        and drinks[houses.index("grün")] == "Kaffee"
+                        equals(nations, "Däne", drinks, "Tee")
+                        and equals(houses, "grün", drinks, "Kaffee")
                         and drinks[2] == "Milch"
                     ):
                         for cigarettes in cigarettes_permutation:
                             if (
-                                cigarettes[houses.index("gelb")] == "Dunhill"
-                                and drinks[cigarettes.index("Winfield")] == "Bier"
-                                and cigarettes[nations.index("Deutscher")]
-                                == "Rothmanns"
-                                and (
-                                    drinks[cigarettes.index("Marlboro") - 1] == "Wasser"
-                                    or drinks[cigarettes.index("Marlboro") + 1]
-                                    == "Wasser"
-                                )
+                                equals(houses, "gelb", cigarettes, "Dunhill")
+                                and equals(cigarettes, "Winfield", drinks, "Bier")
+                                and equals(nations, "Deutscher", cigarettes, "Rothmanns")
+                                and next_to(cigarettes, "Marlboro", drinks, "Wasser")
                             ):
                                 for pets in pets_permutation:
                                     if (
-                                        pets[nations.index("Schwede")] == "Hund"
-                                        and pets[cigarettes.index("Pall Mall")]
-                                        == "Vogel"
-                                        and (
-                                            cigarettes[pets.index("Katze") - 1]
-                                            == "Marlboro"
-                                            or cigarettes[pets.index("Katze") + 1]
-                                            == "Marlboro"
-                                        )
-                                        and (
-                                            cigarettes[pets.index("Pferd") - 1]
-                                            == "Dunhill"
-                                            or cigarettes[pets.index("Pferd") + 1]
-                                            == "Dunhill"
-                                        )
+                                        equals(nations, "Schwede", pets, "Hund")
+                                        and equals(cigarettes, "Pall Mall", pets, "Vogel")
+                                        and next_to(pets, "Katze", cigarettes, "Marlboro")
+                                        and next_to(pets, "Pferd", cigarettes, "Dunhill")
                                     ):
                                         print([f"{x:10}" for x in nations])
                                         print([f"{x:10}" for x in houses])
